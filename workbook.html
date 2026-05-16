@@ -18,6 +18,11 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html {
+    height: 100%;
+    overflow: hidden;
+  }
+
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--lino-caldo);
@@ -25,8 +30,6 @@
     line-height: 1.7;
     height: 100%;
     overflow: hidden;
-    position: fixed;
-    width: 100%;
   }
 
   /* TOP BAR */
@@ -96,17 +99,14 @@
 
   /* PAGES CONTAINER */
   .pages {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    height: 100%;
     overflow: hidden;
   }
 
   .page {
     display: none;
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    height: 100%;
     flex-direction: column;
-    overflow: hidden;
   }
 
   .page.active {
@@ -119,8 +119,8 @@
 
   /* PAGE CONTENT */
   .page-body {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    flex: 1;
+    min-height: 0;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
     padding: 88px 0 100px;
