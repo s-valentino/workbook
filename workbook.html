@@ -23,8 +23,10 @@
     background: var(--lino-caldo);
     color: var(--grafite);
     line-height: 1.7;
-    min-height: 100vh;
+    height: 100%;
     overflow: hidden;
+    position: fixed;
+    width: 100%;
   }
 
   /* TOP BAR */
@@ -96,13 +98,15 @@
   .pages {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
+    overflow: hidden;
   }
 
   .page {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     flex-direction: column;
+    overflow: hidden;
   }
 
   .page.active {
@@ -115,9 +119,9 @@
 
   /* PAGE CONTENT */
   .page-body {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
     padding: 88px 0 100px;
     display: flex;
