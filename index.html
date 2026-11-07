@@ -1080,7 +1080,7 @@
         <p class="finale-testo" style="font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--lino-caldo); margin-bottom:12px;">Cosa ti ha fatto scegliere questo libro, proprio adesso?</p>
         <textarea class="risposta" id="rispostaSara" data-key="finale_motivo" placeholder="Anche una riga sola..." style="margin-bottom:16px;"></textarea>
         <a href="#" class="btn-amazon" id="btnInviaSara" onclick="inviaASara(); return false;">MANDALA A SARA →</a>
-        <p class="finale-testo" style="font-size:13px; color:var(--argilla); margin:12px 0 32px;">Si apre la tua email con la risposta già scritta. La leggo io, una per una, e mi aiuta a scrivere cose che ti somigliano.</p>
+        <p class="finale-testo" id="notaInvioSara" style="font-size:13px; color:var(--argilla); margin:12px 0 32px;">Arriva direttamente a me. La leggo io, una per una, e mi aiuta a scrivere cose che ti somigliano.</p>
 
         <img class="cover-libro" id="copertinaFinale" alt="La tua bambina interiore, Sara Valentino" style="height:min(26vh,220px); margin-bottom:20px;">
         <p class="finale-testo" style="font-size:15px; margin-bottom:16px;">Se il libro ti ha accompagnata, una recensione su Amazon aiuta un'altra donna a trovarlo.</p>
@@ -1233,10 +1233,27 @@
   (function(){ var c=document.querySelector('.page-cover .cover-libro'); var f=document.getElementById('copertinaFinale'); if(c&&f) f.src=c.src; })();
 
   function inviaASara() {
-    var testo = (document.getElementById('rispostaSara').value || '').trim();
-    var oggetto = encodeURIComponent('Dal quaderno: perché ho scelto il libro');
-    var corpo = encodeURIComponent(testo || '');
-    window.location.href = 'mailto:emozionamente.journal@gmail.com?subject=' + oggetto + '&body=' + corpo;
+    var box = document.getElementById('rispostaSara');
+    var btn = document.getElementById('btnInviaSara');
+    var testo = (box.value || '').trim();
+    if (!testo) { box.focus(); box.placeholder = 'Scrivi qui la tua risposta, anche una riga sola...'; return; }
+    btn.textContent = 'INVIO IN CORSO...';
+    fetch('https://qnhnsjqzheyiacfmmmbe.supabase.co/rest/v1/sara_messaggi', {
+      method: 'POST',
+      headers: { 'apikey': 'sb_publishable_o_I1mMXd_l9nnnYQU13oHg_otWYXYoz', 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ fonte: 'quaderno', testo: testo.slice(0, 5000) })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('invio');
+      btn.textContent = 'ARRIVATA, GRAZIE ♡';
+      btn.onclick = function () { return false; };
+      btn.style.pointerEvents = 'none';
+      var nota = document.getElementById('notaInvioSara');
+      if (nota) nota.textContent = 'La tua risposta è arrivata. La leggo io, con calma.';
+    }).catch(function () {
+      btn.textContent = 'MANDALA A SARA →';
+      var oggetto = encodeURIComponent('Dal quaderno: perché ho scelto il libro');
+      window.location.href = 'mailto:emozionamente.journal@gmail.com?subject=' + oggetto + '&body=' + encodeURIComponent(testo);
+    });
   }
   function nextPage() { goToPage(currentPage + 1); }
   function prevPage() { goToPage(currentPage - 1); }
